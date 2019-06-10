@@ -16,8 +16,22 @@ const remove = (id) => {
   })
 }
 
+const update = (id, comida) => {
+  let comidaCadastrada = getAll().find(comida => {
+    return comida.id === id
+  })
+  if (comida.nome !== undefined) {
+    comidaCadastrada.nome = comida.nome
+  }
+  if (comida.descricao !== undefined) {
+    comidaCadastrada.descricao = comida.descricao
+  }
+
+}
+
 module.exports = {
   getAll,
   add,
-  remove
+  remove,
+  update
 }
