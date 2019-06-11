@@ -7,13 +7,14 @@ const servidor = express()
 servidor.use(cors())
 servidor.use(bodyParser.json())
 
-servidor.get('/comidas', (request, response) => {
-  response.send(controller.getAll())
+servidor.get('/comidas', async (request, response) => {
+  //response.send(controller.getAll())
+  controller.getAll()
+    .then(comidas => response.send(comidas))
 })
 
 servidor.post('/comidas', (request, response) => {
-  const novaComida = controller.add(request.body)
-  response.status(200).send(novaComida)
+  response.status(200).send(controller.add(request.body))
 })
 
 servidor.delete('/comidas/:id', (request, response) => {
@@ -23,13 +24,19 @@ servidor.delete('/comidas/:id', (request, response) => {
 servidor.patch('/comidas/:id', (request, response) => {
   const id = request.params.id
   const sucesso = controller.update(id, request.body)
-if (sucesso){
-  response.sendStatus(204)
 
-}else {
-  response.sendStatus(404)
-}
+  if (sucesso) {
+    response.sendStatus(204)
+
+  } else {
+    response.sendStatus(404)
+  }
 })
+servidor.get('/comidas/:id', (request, response) => {
+  const id = request.params.id
+  response.send(controller.getById(id))
+})
+
 
 servidor.listen(3000)
 console.log("servidorzinho rodando na porta 3000")
