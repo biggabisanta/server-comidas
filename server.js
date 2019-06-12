@@ -8,9 +8,14 @@ servidor.use(cors())
 servidor.use(bodyParser.json())
 
 servidor.get('/comidas', async (request, response) => {
-  //response.send(controller.getAll())
   controller.getAll()
     .then(comidas => response.send(comidas))
+})
+
+servidor.get('/comidas/:id', (request, response) => {
+  const id = request.params.id
+  controller.getById(id)
+    .then(comida => response.send(comida))
 })
 
 servidor.post('/comidas', (request, response) => {
@@ -21,9 +26,10 @@ servidor.delete('/comidas/:id', (request, response) => {
   controller.remove(request.params.id)
   response.sendStatus(204)
 })
-servidor.patch('/comidas/:id', (request, response) => {
+servidor.patch('/comidas/:id', async (request, response) => {
   const id = request.params.id
-  const sucesso = controller.update(id, request.body)
+  controller.update(id, request.body)
+    .then(response.sendStatus(204))
 
   if (sucesso) {
     response.sendStatus(204)
@@ -31,10 +37,6 @@ servidor.patch('/comidas/:id', (request, response) => {
   } else {
     response.sendStatus(404)
   }
-})
-servidor.get('/comidas/:id', (request, response) => {
-  const id = request.params.id
-  response.send(controller.getById(id))
 })
 
 
